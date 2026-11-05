@@ -1,22 +1,34 @@
+
 const { test, expect } = require('@playwright/test');
 
-test('Agregar al carrito', async ({ page }) => {
+test('Remove item from cart', async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');
     await expect(page).toHaveTitle(/Swag Labs/);
+
     // LOGIN
     await page.getByPlaceholder('Username').fill('standard_user');
     await page.getByPlaceholder('Password').fill('secret_sauce');
     await page.getByRole('button', { name: 'Login' }).click();
+
+    // Verify that the Products page is displayed.
     await expect(page).toHaveURL(/inventory.html/);
     await expect(page.getByText('Products')).toBeVisible();
-    
-    //Agregue Sauce Labs Backpack al carrito.
+
+    // ADD ITEM TO CART
     await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
-    //Verifique que el contador del carrito muestre 1.
     await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveText('1');
-    //Abra el carrito.
+
+    // Open the shopping cart.
     await page.locator('[data-test="shopping-cart-link"]').click();
     await expect(page.getByText('Your Cart')).toBeVisible();
-    //Verifique que aparezca el producto Sauce Labs Backpack.
     await expect(page.getByText('Sauce Labs Backpack')).toBeVisible();
+
+    // Remove the item from the cart.
+    await page.locator('[data-test="remove-sauce-labs-backpack"]').click();
+
+    // Verify that the cart badge disappears.
+    await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveCount(0);
+
+    // Verify that the item is no longer displayed in the cart.
+    await expect(page.getByText('Sauce Labs Backpack')).not.toBeVisible();
 });

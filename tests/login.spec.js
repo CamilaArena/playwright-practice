@@ -1,15 +1,20 @@
+
 const { test, expect } = require('@playwright/test');
 
-test('Verificar login', async ({ page }) => {
+test('Verify successful login', async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');
     await expect(page).toHaveTitle(/Swag Labs/);
-    // COMPLETAR USUARIO
+
+    // Enter username.
     await page.getByPlaceholder('Username').fill('standard_user');
-    // COMPLETAR CONTRASEÑA
+
+    // Enter password.
     await page.getByPlaceholder('Password').fill('secret_sauce');
-    // HACER CLIC EN LOGIN
+
+    // Click the Login button.
     await page.getByRole('button', { name: 'Login' }).click();
-    // VERIFICAR QUE APARECE PRODUCTS
+
+    // Verify that the user is redirected to the Products page.
     await expect(page).toHaveURL(/inventory.html/);
     await expect(page.getByText('Products')).toBeVisible();
 });
