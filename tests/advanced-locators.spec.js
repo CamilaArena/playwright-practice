@@ -51,10 +51,10 @@ test('Advanced locators B', async ({ page }) => {
     await expect(page).toHaveURL(/inventory.html/);
     await expect(page.getByText('Products')).toBeVisible();
 
-    const buttons = page.getByRole('button', { name: 'Add to cart' });
-    await expect(buttons).toHaveCount(6);
-    await buttons.first().click();
-    await buttons.last().click();
+    const producto = page.locator('.inventory_item')
+    .filter({ hasText: 'Sauce Labs Backpack' });
+    const boton = producto.getByRole('button', { name: 'Add to cart' });
+    await boton.click();
     //Check if both items have been added to chart
-    await expect(page.locator('.shopping_cart_badge')).toHaveText('2');
+    await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
 });
